@@ -16,7 +16,20 @@ class GameScene extends Phaser.Scene{
     create(){
         this.createBackground();
         this.createCard();
+        this.start();
+    };
+    start(){
         this.openedCard = null;
+        this.openCardCount = 0;
+        this.initCards();
+    };
+    initCards(){
+        let positons = this.getCardsPositions();
+        this.cards.forEach(card =>{
+            let positon = positons.pop();
+            card.close();
+            card.setPosition(positon.x,positon.y);
+        })
     };
     createBackground() {
         this.add.sprite(0,0,'bg').setOrigin(0,0);
@@ -24,12 +37,10 @@ class GameScene extends Phaser.Scene{
 
     createCard(){
         this.cards = [];
-        let positons = this.getCardsPositions();
-        Phaser.Utils.Array.Shuffle(positons);
 
         for (let value of config.cards) {
             for(let i = 0; i < 2; i++){
-                this.cards.push(new Card(this,value,positons.pop()));
+                this.cards.push(new Card(this,value));
             };
         };
         this.input.on("gameobjectdown", this.onCardClick, this);
@@ -42,6 +53,7 @@ class GameScene extends Phaser.Scene{
             if(this.openedCard){
                 if(this.openedCard.value === card.value){
                     this.openedCard = null;
+                    ++this.openCardCount;
                 }else{
                     this.openedCard.close();
                     this.openedCard = card;
@@ -51,6 +63,9 @@ class GameScene extends Phaser.Scene{
             }
         }
         card.open();
+        if(this.openCardCount === this.cards.length/2){
+            this.start();
+        }
     };
     getCardsPositions(){
         let positons =[];
@@ -70,6 +85,6 @@ class GameScene extends Phaser.Scene{
                 })
             };
         };
-        return positons;
+        return Phaser.Utils.Array.Shuffle(positons);
     };
 };
