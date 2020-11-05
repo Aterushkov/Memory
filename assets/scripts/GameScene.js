@@ -7,13 +7,22 @@ class GameScene extends Phaser.Scene{
         this.load.image('bg','assets/sprites/background.png');
         this.load.image('card','assets/sprites/card.png');
     };
-    create(){
+    createBackground() {
         this.add.sprite(0,0,'bg').setOrigin(0,0);
-        let positons = this.getCardsPositions();
-        for (let positon of positons){
-            this.add.sprite(positon.x,positon.y,'card').setOrigin(0,0);
-        };
     };
+    createCard(){
+        this.cards = [];
+        let positons = this.getCardsPositions();
+        for (let positon of positons) {
+            this.cards.push(new Card(this,positon));
+        }
+    };
+    create(){
+        this.createBackground();
+        this.createCard();
+
+        };
+
     getCardsPositions(){
         let positons =[];
         let cardTexture = this.textures.get('card').getSourceImage();
