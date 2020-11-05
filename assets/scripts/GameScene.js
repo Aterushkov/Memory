@@ -13,12 +13,15 @@ class GameScene extends Phaser.Scene{
         this.load.image('card5','assets/sprites/card5.png');
 
     };
+    create(){
+        this.createBackground();
+        this.createCard();
+        this.openedCard = null;
+    };
     createBackground() {
         this.add.sprite(0,0,'bg').setOrigin(0,0);
     };
-    onCardClick(pointer, card){
-         card.open();
-    }
+
     createCard(){
         this.cards = [];
         let positons = this.getCardsPositions();
@@ -29,14 +32,26 @@ class GameScene extends Phaser.Scene{
                 this.cards.push(new Card(this,value,positons.pop()));
             };
         };
-        this.inputon("gameobjectdown", this.onCardClick, this);
+        this.input.on("gameobjectdown", this.onCardClick, this);
     };
-    create(){
-        this.createBackground();
-        this.createCard();
 
-        };
-
+    onCardClick(pointer, card){
+        if(card.opened){
+            return false;
+        } else{
+            if(this.openedCard){
+                if(this.openedCard.value === card.value){
+                    this.openedCard = null;
+                }else{
+                    this.openedCard.close();
+                    this.openedCard = card;
+                }
+            }else{
+                this.openedCard = card;
+            }
+        }
+        card.open();
+    };
     getCardsPositions(){
         let positons =[];
         let cardTexture = this.textures.get('card').getSourceImage();
