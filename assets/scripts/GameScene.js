@@ -16,6 +16,9 @@ class GameScene extends Phaser.Scene{
     createBackground() {
         this.add.sprite(0,0,'bg').setOrigin(0,0);
     };
+    onCardClick(pointer, card){
+         card.open();
+    }
     createCard(){
         this.cards = [];
         let positons = this.getCardsPositions();
@@ -26,6 +29,7 @@ class GameScene extends Phaser.Scene{
                 this.cards.push(new Card(this,value,positons.pop()));
             };
         };
+        this.inputon("gameobjectdown", this.onCardClick, this);
     };
     create(){
         this.createBackground();
