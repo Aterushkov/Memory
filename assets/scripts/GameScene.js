@@ -13,19 +13,40 @@ class GameScene extends Phaser.Scene{
         this.load.image('card5','assets/sprites/card5.png');
 
     };
+    createText(){
+        this.timeoutText = this.add.text(10,10,"", {
+            font:'36px',
+            fill:'#000',
+
+        });
+    };
+    onTimerTick(){
+        this.timeoutText.setText("Времени осталось: "+ this.timeout);
+        if(this.timeout<=0){
+            this.start();
+        }else{
+            --this.timeout;
+        }
+
+    };
     create(){
+        this.timeout = config.timeout;
+        this.createTimer();
         this.createBackground();
         this.createText();
         this.createCard();
         this.start();
     };
-    createText(){
-        this.TimeoutText = this.add.text(10,10,"Времени осталось: ", {
-            font:'36px',
-            fill:'#000'
+    createTimer(){
+        this.time.addEvent({
+           delay: 1000,
+           callback: this.onTimerTick,
+            callbackScope: this,
+            loop:true,
         });
     };
     start(){
+        this.timeout =  config.timeout;
         this.openedCard = null;
         this.openCardCount = 0;
         this.initCards();
