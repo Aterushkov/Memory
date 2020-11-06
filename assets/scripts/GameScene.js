@@ -15,8 +15,15 @@ class GameScene extends Phaser.Scene{
     };
     create(){
         this.createBackground();
+        this.createText();
         this.createCard();
         this.start();
+    };
+    createText(){
+        this.TimeoutText = this.add.text(10,10,"Времени осталось: ", {
+            font:'36px',
+            fill:'#000'
+        });
     };
     start(){
         this.openedCard = null;
